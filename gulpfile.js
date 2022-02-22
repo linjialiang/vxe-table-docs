@@ -72,3 +72,24 @@ gulp.task('build_docs', gulp.series('build_v4_docs', 'copy_docs_index', 'move_do
   ])
     .pipe(gulp.dest('docs'))
 }))
+
+gulp.task(
+  'copy_docs_index_a2',
+  gulp.parallel('copy_v3_docs', () => {
+    return gulp
+      .src('v4/dist/v4/index.html')
+      .pipe(
+        rename({
+          basename: '404',
+        }),
+      )
+      .pipe(gulp.dest('v4/dist/v4'));
+  }),
+);
+
+gulp.task(
+  'build_docs_a2',
+  gulp.series('build_v4_docs', 'copy_docs_index_a2', 'move_docs_latest', () => {
+    return gulp.src(['v4/dist/**']).pipe(gulp.dest('docs'));
+  }),
+);
